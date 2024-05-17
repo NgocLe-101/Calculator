@@ -10,6 +10,24 @@ let operator = ''; // Store operator
 let activeBuffer = '' // Store what currently render in the user screen
 
 let flagState = 0;
+let usedDot = false;
+
+function add(a,b) {
+    return parseFloat(a) + parseFloat(b);
+}
+
+function subtract(a,b) {
+    return parseFloat(a) - parseFloat(b);
+}
+
+function multiply(a,b) {
+    return parseFloat(a) * parseFloat(b);
+}
+
+function divide(a,b) {
+    return parseFloat(a) / parseFloat(b);
+}
+
 
 function clearBuffer() {
     activeBuffer = '0'
@@ -48,20 +66,20 @@ function renderDisplay() {
     screenOperator.textContent = screenOperatorText
 }
 
-function calculate() {
+function operate() {
     let result;
     switch (operator) {
         case '+':
-            result = parseFloat(buffer1) + parseFloat(buffer2);
+            result = add(buffer1, buffer2);
             break;
         case '-':
-            result = parseFloat(buffer1) - parseFloat(buffer2);
+            result = subtract(buffer1, buffer2);
             break;
         case '*':
-            result = parseFloat(buffer1) * parseFloat(buffer2);
+            result = multiply(buffer1, buffer2);
             break;
         case '/':
-            result = parseFloat(buffer1) / parseFloat(buffer2);
+            result = divide(buffer1, buffer2);
             break;
     }
     activeBuffer = result
@@ -69,7 +87,7 @@ function calculate() {
 
 function makeCalculation() {
     buffer2 = activeBuffer;
-    calculate();
+    operate();
 }
 
 function registerCommand(button) {
@@ -94,6 +112,7 @@ function registerCommand(button) {
             buffer2 = ''
         }
         flagState = 0;
+        usedDot = false;
     } else if (isNumber(button) || button === '.') {
         if (button === '0' && (activeBuffer === '0' || activeBuffer === '')) {
             return;
@@ -103,12 +122,22 @@ function registerCommand(button) {
             activeBuffer = '';
             flagState = 1;
         }
+        if (button === '.') {
+            if (usedDot) {
+                return;
+            } else {
+            usedDot = true;
+            }
+        }
         activeBuffer += button;
     } else if (isDeletion(button)) {
         switch (button) {
             case '<-':
                 if (buffer2 !== ''){
                     return;
+                }
+                if (activeBuffer[activeBuffer.length - 1] === '.') {
+                    usedDot = false;
                 }
                 activeBuffer = activeBuffer.slice(0,activeBuffer.length - 1);
                 if (activeBuffer === '') {
@@ -117,11 +146,16 @@ function registerCommand(button) {
                 }
                 break;
             case 'C':
+                usedDot = false;
                 clearBuffer()
                 flagState = 0
                 break;
         }
     } else if (button === '=') {
+        if (buffer1 === '')
+        {
+            return;
+        }
         makeCalculation();
         flagState = 0
     }
