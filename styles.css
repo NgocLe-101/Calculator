@@ -7,6 +7,18 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
+body {
+    background-image: url(https://images8.alphacoders.com/134/thumb-1920-1347727.png);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .container {
     background-color: #202020;
     max-width: 400px;
@@ -57,11 +69,6 @@
     background-color: #3c3c3c;
 }
 
-.button .numpad {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .button .extension {
     display: flex;
 }
@@ -79,9 +86,15 @@
     flex-direction: row;
 }
 
+.button .numpad {
+    margin-top: 2px;
+}
+
 .button .numpad button {
+    flex: 0 0 auto;
     background-color: #3b3b3b;
     margin: 2px;
+    display: inline-block;
 }
 
 .button .numpad button:hover {
